@@ -1,19 +1,11 @@
 const Sequelize = require("sequelize");
 
-// Initialize postgres connection
-// If on local server ssl is not required, if being hosted somewhere, require ssl
-let dialectOpt = process.env.DATABASE.includes("localhost") ? "" : {
-    ssl: {
-        require: true, // This will help you. But you will see new error
-        rejectUnauthorized: false // This line will fix new error
-    }
-}
-const sequelize = new Sequelize(`${process.env.DATABASE}`, {
-    host: 'localhost',
+// Initialize postgres/RDS connection
+const sequelize = new Sequelize(`${process.env.RDS_DBNAME}`, `${process.env.RDS_USERNAME}`, `${process.env.RDS_PASSWORD}`, {
+    host     : process.env.RDS_HOSTNAME,
+    port     : process.env.RDS_PORT,
     dialect: "postgres",
-    dialectOptions: dialectOpt,
-    // UNCOMMENT LOGGING FOR CLEANER JEST TESTING **
-    // logging: false
+    ssl: 'Amazon RDS'
 });
 
 // Authenticate postgres connection
